@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no"/>
+<title>💝 St. Valentine</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&family=Dancing+Script:wght@600;700&display=swap');
+
+  :root {
+    --rose:     #e63964;
+    --rose-light: #f06292;
+    --cream:    #fff5f7;
+    --blush:    #ffcdd5;
+    --deep:     #ad1457;
+  }
+
+  * { margin:0; padding:0; box-sizing:border-box; }
+
+  body {
+    min-height: 100vh;
+    min-height: 100dvh;
+    background: var(--cream);
+    font-family: 'Playfair Display', serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    position: relative;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  /* ─── FALLING HEARTS ─── */
+  .hearts-container {
+    position: fixed; inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    overflow: hidden;
+  }
+  .heart {
+    position: absolute;
+    top: -60px;
+    opacity: 0.15;
+    animation: fall linear infinite;
+  }
+  @keyframes fall {
+    0%   { transform: translateY(0) rotate(0deg); opacity:.15; }
+    80%  { opacity: .2; }
+    100% { transform: translateY(105vh) rotate(360deg); opacity: 0; }
+  }
+
+  /* ─── CONFETTI ─── */
+  .confetti-container {
+    position: fixed; inset: 0;
+    pointer-events: none;
+    z-index: 50;
+  }
+  .confetti-piece { position: absolute; opacity: 0; }
+  @keyframes confetti-fall {
+    0%   { transform: translateY(0) rotate(0deg) scale(1); opacity:1; }
+    100% { transform: translateY(100vh) rotate(720deg) scale(0.3); opacity:0; }
+  }
+
+  /* ─── CARD ─── */
+  .card {
+    position: relative;
+    z-index: 1;
+    background: #fff;
+    border-radius: 28px;
+    box-shadow: 0 12px 60px rgba(230,57,100,.18);
+    padding: 48px 36px 44px;
+    max-width: 440px;
+    width: 90%;
+    text-align: center;
+    overflow: visible;
+    animation: cardPop .6s cubic-bezier(.34,1.56,.64,1) both;
+  }
+  @keyframes cardPop {
+    0%   { transform: scale(.82); opacity:0; }
+    100% { transform: scale(1);   opacity:1; }
+  }
+
+  .ribbon {
+    position: absolute;
+    top: -18px; left: 50%;
+    transform: translateX(-50%);
+    background: var(--rose);
+    color: #fff;
+    font-family: 'Dancing Script', cursive;
+    font-size: 1.1rem;
+    padding: 5px 24px;
+    border-radius: 20px;
+    box-shadow: 0 4px 14px rgba(230,57,100,.35);
+    white-space: nowrap;
+  }
+
+  .big-heart {
+    font-size: 3.4rem;
+    display: block;
+    margin: 12px auto 6px;
+    animation: pulse 1.2s ease-in-out infinite;
+  }
+  @keyframes pulse {
+    0%,100% { transform: scale(1); }
+    50%     { transform: scale(1.15); }
+  }
+
+  .question {
+    font-size: 1.45rem;
+    color: var(--deep);
+    font-weight: 700;
+    line-height: 1.35;
+    margin: 4px 0 6px;
+  }
+  .question em { font-style: italic; color: var(--rose); }
+
+  .sub {
+    font-size: .88rem;
+    color: #9e6070;
+    font-style: italic;
+    margin-bottom: 26px;
+  }
+
+  /* ─── BUTTONS ─── */
+  .btn-wrap {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 120px;
+    position: relative;
+    overflow: visible;
+  }
+
+  .btn-yes {
+    background: linear-gradient(135deg, var(--rose), var(--deep));
+    color: #fff;
+    border: none;
+    border-radius: 50px;
+    font-family: 'Dancing Script', cursive;
+    font-weight: 700;
+    font-size: 1.5rem;
+    padding: 16px 36px;
+    cursor: pointer;
+    position: relative;
+    z-index: 2;
+    overflow: hidden;
+    white-space: nowrap;
+    transform-origin: center;
+    transition: transform .3s cubic-bezier(.34,1.56,.64,1), box-shadow .25s;
+    box-shadow: 0 6px 24px rgba(173,20,87,.35);
+  }
+  .btn-yes::before {
+    content:'';
+    position: absolute; inset: 0;
+    background: linear-gradient(135deg, rgba(255,255,255,.25), transparent 60%);
+    pointer-events: none;
+  }
+  .btn-yes:active { filter: brightness(.88); }
+
+  .btn-no {
+    background: #fff;
+    color: var(--rose);
+    border: 2px solid var(--blush);
+    border-radius: 50px;
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    font-size: 1.1rem;
+    padding: 12px 28px;
+    cursor: pointer;
+    position: absolute;
+    white-space: nowrap;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    transition: left .22s cubic-bezier(.34,1.56,.64,1),
+                top  .22s cubic-bezier(.34,1.56,.64,1),
+                font-size .25s, padding .25s, opacity .18s;
+  }
+
+  /* ─── MESSAGE ─── */
+  .msg {
+    margin-top: 22px;
+    font-size: 1.05rem;
+    color: var(--deep);
+    font-style: italic;
+    min-height: 1.5em;
+    opacity: 0;
+    transform: translateY(8px);
+    transition: opacity .35s, transform .35s;
+  }
+  .msg.show { opacity:1; transform: translateY(0); }
+
+  /* ─── WIN SCREEN ─── */
+  .win-screen {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 0 24px;
+    position: relative;
+    z-index: 1;
+    animation: cardPop .55s cubic-bezier(.34,1.56,.64,1) both;
+  }
+  .win-screen .big-heart { font-size: 4.8rem; animation-duration: .9s; }
+  .win-screen h1 {
+    font-family: 'Dancing Script', cursive;
+    font-size: 2.6rem;
+    color: var(--rose);
+    margin: 10px 0 8px;
+  }
+  .win-screen .win-msg {
+    color: #9e6070;
+    font-size: 1.05rem;
+    font-style: italic;
+    line-height: 1.5;
+  }
+  .win-screen .win-msg em { color: var(--rose); font-weight: 700; font-style: italic; }
+
+  /* badge « elle a dit Non X fois » */
+  .non-count {
+    margin-top: 20px;
+    background: rgba(230,57,100,.07);
+    border: 1.5px solid var(--blush);
+    border-radius: 18px;
+    padding: 12px 24px;
+    display: none; /* montré en JS si noClicks > 0 */
+  }
+  .non-count .big-num {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--rose);
+    display: block;
+  }
+  .non-count .label {
+    font-size: .82rem;
+    color: #9e6070;
+    margin-top: 2px;
+    display: block;
+  }
+
+  .deco-row {
+    margin-top: 22px;
+    font-size: 1.2rem;
+    letter-spacing: 5px;
+    opacity: .55;
+    position: relative; z-index:1;
+  }
+
+  /* ════ MOBILE ════ */
+  @media (max-width: 480px) {
+    .card        { padding: 42px 20px 38px; width: 94%; border-radius: 22px; }
+    .ribbon      { font-size: .95rem; padding: 4px 16px; }
+    .big-heart   { font-size: 2.8rem; }
+    .question    { font-size: 1.2rem; }
+    .sub         { font-size: .8rem; margin-bottom: 18px; }
+    .btn-wrap    { min-height: 100px; }
+    .btn-yes     { font-size: 1.3rem; padding: 15px 30px; }
+    .btn-no      { font-size: 1rem;   padding: 11px 22px; }
+    .msg         { font-size: .92rem; margin-top: 14px; }
+
+    .win-screen .big-heart { font-size: 3.6rem; }
+    .win-screen h1         { font-size: 2.1rem; }
+    .win-screen .win-msg   { font-size: .95rem; }
+    .non-count             { padding: 10px 18px; }
+    .non-count .big-num    { font-size: 1.7rem; }
+  }
+
+  @media (max-width: 360px) {
+    .card     { padding: 36px 14px 32px; width: 96%; }
+    .question { font-size: 1.08rem; }
+    .btn-yes  { font-size: 1.15rem; padding: 14px 24px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="hearts-container" id="heartsContainer"></div>
+<div class="confetti-container" id="confettiContainer"></div>
+
+<!-- CARTE -->
+<div class="card" id="card">
+  <div class="ribbon">✨ 14 Février ✨</div>
+  <span class="big-heart">💝</span>
+  <p class="question">Veux-tu être ma<br><em>Valentine</em> ? 💝</p>
+  <p class="sub">C'est une question très importante…</p>
+
+  <div class="btn-wrap" id="btnWrap">
+    <button class="btn-yes" id="btnYes">Ouiii bien sûr ! 💕</button>
+    <button class="btn-no"  id="btnNo">Non</button>
+  </div>
+  <p class="msg" id="msg"></p>
+</div>
+
+<!-- WIN -->
+<div class="win-screen" id="winScreen">
+  <span class="big-heart">💝</span>
+  <h1 id="winTitle"></h1>
+  <p class="win-msg" id="winMsg"></p>
+  <div class="non-count" id="nonCount">
+    <span class="big-num" id="nonNum">0</span>
+    <span class="label">fois elle a dit « Non » 😤</span>
+  </div>
+  <div class="deco-row">💐 💋 💐</div>
+</div>
+
+<div class="deco-row" id="decoRow">💝 💖 💗 💓 💞</div>
+
+<script>
+/* ── falling hearts ── */
+(function(){
+  const c = document.getElementById('heartsContainer');
+  const e = ['💝','💖','💗','💓','💞','💘','🌹','❤️'];
+  for(let i=0;i<20;i++){
+    const h = document.createElement('div');
+    h.className = 'heart';
+    h.textContent = e[Math.random()*e.length|0];
+    h.style.left = (Math.random()*100)+'%';
+    h.style.fontSize = (.85+Math.random()*1.5)+'rem';
+    h.style.animationDuration = (7+Math.random()*9)+'s';
+    h.style.animationDelay = (-Math.random()*12)+'s';
+    c.appendChild(h);
+  }
+})();
+
+/* ── state ── */
+let noClicks = 0;
+let yesScale = 1;
+
+const btnYes  = document.getElementById('btnYes');
+const btnNo   = document.getElementById('btnNo');
+const msg     = document.getElementById('msg');
+
+/* hover souris (pas de conflit mobile) */
+btnYes.addEventListener('mouseenter', ()=>{
+  btnYes.style.transform  = 'scale('+(yesScale*1.08)+')';
+  btnYes.style.boxShadow  = '0 8px 32px rgba(173,20,87,.45)';
+});
+btnYes.addEventListener('mouseleave', ()=>{
+  btnYes.style.transform  = 'scale('+yesScale+')';
+  btnYes.style.boxShadow  = '0 6px 24px rgba(173,20,87,.35)';
+});
+
+/* messages « Non » */
+const noMsgs = [
+  "Hm… es-tu sûre ? 👀",
+  "Vraiment vraiment ? 😳",
+  "C'est la vie qui est dure…",
+  "Le bouton « Oui » est tellement plus beau…",
+  "Tu es sûre sûre sûre ?!",
+  "Le « Non » devient vraiment tout petit…",
+  "Il te supplie, le petit « Oui » ! 🥺",
+  "Dernière chance… 😭",
+  "… …",
+  "Ok ok ok tu as gagné 😤"
+];
+
+/* texte du win screen selon noClicks */
+function getWinTexts(n){
+  if(n===0) return { title:"Ouiii ! 🎉",     msg:"Merci… <em>ça fait tellement plaisir</em> 🥹💝" };
+  if(n===1) return { title:"Enfin ! 🎉",     msg:"Un petit « Non » avant… mais <em>elle a quand même dit oui !</em> 💕" };
+  if(n<=3)  return { title:"Ouiii ! 🎉",     msg:"Elle a mis un peu de temps… mais <em>elle a quand même dit oui !</em> 😘" };
+  if(n<=6)  return { title:"Enfin enfin ! 🎉", msg:"Après quelques « Non »… <em>elle a quand même dit oui !</em> 😤💝" };
+  if(n<=9)  return { title:"Oooh ! 🎉",      msg:"Elle a résisté longtemps… mais <em>le « Oui » a gagné !</em> 😂💕" };
+  return             { title:"À ENFIN ! 🎉",   msg:"Le « Non » est parti se cacher… <em>elle avait plus le choix</em> 😤😂" };
+}
+
+/* ── Non ── */
+function onNo(){
+  noClicks++;
+  btnNo.style.transform = 'none';
+
+  // shrink
+  const noPx = Math.max(11, 40 - noClicks*3);
+  btnNo.style.fontSize = noPx+'px';
+  btnNo.style.padding  = (noPx*.36)+'px '+(noPx*.7)+'px';
+
+  // grow Oui
+  yesScale = 1 + noClicks * 0.14;
+  btnYes.style.transform = 'scale('+yesScale+')';
+  const sh = Math.round(6+noClicks*2);
+  btnYes.style.boxShadow = '0 '+sh+'px '+(sh*4)+'px rgba(173,20,87,.4)';
+
+  // saut du Non dans la carte
+  const cardW = document.getElementById('card').getBoundingClientRect().width;
+  btnNo.style.right = 'auto';
+  btnNo.style.left  = (cardW*0.05 + Math.random()*(cardW*0.7)) + 'px';
+  btnNo.style.top   = (-40 + Math.random()*80) + 'px';
+
+  // message
+  msg.textContent = noMsgs[Math.min(noClicks-1, noMsgs.length-1)];
+  msg.classList.remove('show');
+  void msg.offsetWidth;
+  msg.classList.add('show');
+
+  if(noClicks>=10){ btnNo.style.opacity='0'; btnNo.style.pointerEvents='none'; }
+}
+
+/* ── Oui ── */
+function onYes(){
+  const t = getWinTexts(noClicks);
+  document.getElementById('winTitle').textContent = t.title;
+  document.getElementById('winMsg').innerHTML     = t.msg;
+
+  if(noClicks > 0){
+    document.getElementById('nonCount').style.display = 'block';
+    document.getElementById('nonNum').textContent     = noClicks;
+  }
+
+  document.getElementById('card').style.display      = 'none';
+  document.getElementById('decoRow').style.display   = 'none';
+  document.getElementById('winScreen').style.display = 'flex';
+  launchConfetti();
+}
+
+/* events – on utilise pointerdown pour être compatible souris + tactile sans doublons */
+btnNo.addEventListener('pointerdown', function(e){ e.preventDefault(); onNo(); });
+btnYes.addEventListener('pointerdown', function(e){ e.preventDefault(); onYes(); });
+
+/* ── confetti ── */
+function launchConfetti(){
+  const c = document.getElementById('confettiContainer');
+  const colors = ['#e63964','#f06292','#ad1457','#f9a825','#fff176','#ce93d8','#fff'];
+  for(let i=0;i<65;i++){
+    const el = document.createElement('div');
+    el.className = 'confetti-piece';
+    const s = 7+Math.random()*10;
+    el.style.width  = s+'px';
+    el.style.height = s+'px';
+    el.style.background = colors[Math.random()*colors.length|0];
+    el.style.borderRadius = Math.random()>.5?'50%':'3px';
+    el.style.left = (Math.random()*100)+'%';
+    el.style.top  = '0';
+    el.style.animationDuration = (1.2+Math.random()*1.6)+'s';
+    el.style.animationDelay    = (Math.random()*.4)+'s';
+    el.style.animationName     = 'confetti-fall';
+    el.style.animationTimingFunction = 'cubic-bezier(.2,.8,.3,1)';
+    el.style.animationFillMode = 'forwards';
+    c.appendChild(el);
+  }
+}
+</script>
+</body>
+</html>
